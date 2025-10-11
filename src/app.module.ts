@@ -8,6 +8,9 @@ import { MenuModule } from './menu/menu.module';
 import { YetkilerModule } from './yetkiler/yetkiler.module';
 import { KullanicilarModule } from './kullanicilar/kullanicilar.module';
 import { SanalMagazaModule } from './sanal-magaza/sanal-magaza.module';
+import { TrendyolModule } from './trendyol/trendyol.module';
+import { HepsiburadaModule } from './hepsiburada/hepsiburada.module';
+import { N11Module } from './n11/n11.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { SanalMagazaModule } from './sanal-magaza/sanal-magaza.module';
     YetkilerModule,
     KullanicilarModule,
     SanalMagazaModule,
+    TrendyolModule,
+    HepsiburadaModule,
+    N11Module,
   ],
   controllers: [AppController],
   providers: [AppService],

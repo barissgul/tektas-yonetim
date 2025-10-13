@@ -72,6 +72,28 @@ export class TrendyolController {
 
   // ==================== ÜRÜN İŞLEMLERİ ====================
 
+  @Post(':magazaKodu/products')
+  @ApiOperation({ summary: 'Trendyol\'a ürün aktar' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({ status: 201, description: 'Ürün başarıyla oluşturuldu' })
+  createProduct(
+    @Param('magazaKodu') magazaKodu: string,
+    @Body() productData: any,
+  ) {
+    return this.trendyolService.createProduct(magazaKodu, productData);
+  }
+
+  @Put(':magazaKodu/products')
+  @ApiOperation({ summary: 'Trendyol ürün bilgilerini güncelle' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({ status: 200, description: 'Ürün başarıyla güncellendi' })
+  updateProduct(
+    @Param('magazaKodu') magazaKodu: string,
+    @Body() productData: any,
+  ) {
+    return this.trendyolService.updateProduct(magazaKodu, productData);
+  }
+
   @Get(':magazaKodu/products')
   @ApiOperation({ summary: 'Trendyol ürünleri getir' })
   @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })

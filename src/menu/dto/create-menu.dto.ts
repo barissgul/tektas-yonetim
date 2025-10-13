@@ -7,10 +7,15 @@ export class CreateMenuDto {
   @IsNotEmpty()
   menu: string;
 
-  @ApiProperty({ description: 'Ana menü ID', example: 1 })
+  @ApiProperty({ description: 'Ana menü ID', example: 1, required: false })
   @IsNumber()
-  @IsNotEmpty()
-  anamenu_id: number;
+  @IsOptional()
+  anamenu_id?: number;
+
+  @ApiProperty({ description: 'Alt ana menü ID', example: 1, required: false })
+  @IsNumber()
+  @IsOptional()
+  alt_anamenu_id?: number;
 
   @ApiProperty({
     description: 'Rota bilgisi',

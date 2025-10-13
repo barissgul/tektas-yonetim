@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AnamenuModule } from './anamenu/anamenu.module';
+import { AltAnamenuModule } from './alt-anamenu/alt-anamenu.module';
 import { MenuModule } from './menu/menu.module';
 import { YetkilerModule } from './yetkiler/yetkiler.module';
 import { KullanicilarModule } from './kullanicilar/kullanicilar.module';
@@ -11,6 +12,8 @@ import { SanalMagazaModule } from './sanal-magaza/sanal-magaza.module';
 import { TrendyolModule } from './trendyol/trendyol.module';
 import { HepsiburadaModule } from './hepsiburada/hepsiburada.module';
 import { N11Module } from './n11/n11.module';
+import { TektasModule } from './tektas/tektas.module';
+import { MarkalarModule } from './markalar/markalar.module';
 
 @Module({
   imports: [
@@ -28,6 +31,7 @@ import { N11Module } from './n11/n11.module';
       synchronize: process.env.NODE_ENV === 'development',
     }),
     AnamenuModule,
+    AltAnamenuModule,
     MenuModule,
     YetkilerModule,
     KullanicilarModule,
@@ -35,6 +39,8 @@ import { N11Module } from './n11/n11.module';
     TrendyolModule,
     HepsiburadaModule,
     N11Module,
+    TektasModule,
+    MarkalarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

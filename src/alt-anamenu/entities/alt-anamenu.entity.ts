@@ -1,21 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Anamenu } from '../../anamenu/entities/anamenu.entity';
 import { Menu } from '../../menu/entities/menu.entity';
-import { AltAnamenu } from '../../alt-anamenu/entities/alt-anamenu.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity('anamenu')
-export class Anamenu {
-  @ApiProperty({ description: 'Anamenu ID' })
+@Entity('alt_anamenu')
+export class AltAnamenu {
+  @ApiProperty({ description: 'Alt Ana Menü ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ description: 'Ana menü adı' })
+  @ApiProperty({ description: 'Alt Ana menü adı' })
   @Column({ type: 'varchar', length: 255 })
-  anamenu: string;
+  alt_anamenu: string;
 
-  @ApiProperty({ description: 'Rota bilgisi' })
-  @Column({ type: 'varchar', length: 255 })
-  rota: string;
+  @ApiProperty({ description: 'Ana menü ID' })
+  @Column({ name: 'anamenu_id' })
+  anamenu_id: number;
 
   @ApiProperty({ description: 'İkon adı', required: false })
   @Column({ type: 'varchar', length: 100, nullable: true })
@@ -32,11 +32,12 @@ export class Anamenu {
   @Column({ type: 'varchar', length: 255, nullable: true })
   yetki_ids?: string;
 
-  @ApiProperty({ description: 'Alt menüler', type: () => [Menu] })
-  @OneToMany(() => Menu, (menu) => menu.anamenu)
-  menuler: Menu[];
+  @ApiProperty({ description: 'Ana menü', type: () => Anamenu })
+  @ManyToOne(() => Anamenu, (anamenu) => anamenu.altAnamenuler)
+  @JoinColumn({ name: 'anamenu_id' })
+  anamenu: Anamenu;
 
-  @ApiProperty({ description: 'Alt ana menüler', type: () => [AltAnamenu] })
-  @OneToMany(() => AltAnamenu, (altAnamenu) => altAnamenu.anamenu)
-  altAnamenuler: AltAnamenu[];
+  @ApiProperty({ description: 'Alt menüler', type: () => [Menu] })
+  @OneToMany(() => Menu, (menu) => menu.altAnamenu)
+  menuler: Menu[];
 }

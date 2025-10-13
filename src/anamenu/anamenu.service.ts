@@ -19,11 +19,17 @@ export class AnamenuService {
 
   async findAll(): Promise<Anamenu[]> {
     return await this.anamenuRepository.find({
-      relations: ['menuler'],
+      relations: ['menuler', 'altAnamenuler', 'altAnamenuler.menuler'],
       order: {
         sira: 'ASC',
         menuler: {
           sira: 'ASC',
+        },
+        altAnamenuler: {
+          sira: 'ASC',
+          menuler: {
+            sira: 'ASC',
+          },
         },
       },
     });
@@ -32,7 +38,7 @@ export class AnamenuService {
   async findOne(id: number): Promise<Anamenu> {
     const anamenu = await this.anamenuRepository.findOne({
       where: { id },
-      relations: ['menuler'],
+      relations: ['menuler', 'altAnamenuler', 'altAnamenuler.menuler'],
     });
 
     if (!anamenu) {

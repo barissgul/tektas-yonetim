@@ -1,0 +1,1043 @@
+{
+	"info": {
+		"_postman_id": "e3b6bc6f-2fd4-4bf8-8408-e2e420ae3332",
+		"name": "Stage Trendyol Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27756449"
+	},
+	"item": [
+		{
+			"name": "Product Integration",
+			"item": [
+				{
+					"name": "Transfer Product (Ürün Aktarımı)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"barcode\": \"Testbarkod-Deneme\",\n      \"title\": \"Bebek Takımı Pamuk\",\n      \"productMainId\": \"1234BT\",\n      \"brandId\": 1791,\n      \"categoryId\": 411,\n      \"quantity\": 100,\n      \"stockCode\": \"STK-345\",\n      \"dimensionalWeight\": 2,\n      \"description\": \"Ürün açıklama bilgisi\",\n      \"currencyType\": \"TRY\",\n      \"listPrice\": 250.99,\n      \"salePrice\": 120.99,\n      \"vatRate\": 18,\n      \"cargoCompanyId\": 10,\n      \"images\": [\n        {\n          \"url\": \"https://www.sampleadress/path/folder/image_1.jpg\"\n        }\n      ],\n      \"attributes\": [\n        {\n          \"attributeId\": 338,\n          \"attributeValueId\": 6980\n        },\n        {\n           \"attributeId\": 47,\n           \"customAttributeValue\": \"PUDRA\"\n         },\n        {\n          \"attributeId\": 346,\n          \"attributeValueId\": 4290\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/v2/products",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"v2",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product Filtering (Ürün Listeleme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/products?page=0&size=50",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products (Ürün Bilgisi Güncelleme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"barcode\": \"Testbarkod-Deneme\",\n      \"title\": \"Bebek Takımı Pamuk\",\n      \"productMainId\": \"1234BT\",\n      \"brandId\": 1791,\n      \"categoryId\": 411,\n      \"quantity\": 100,\n      \"stockCode\": \"STK-345\",\n      \"dimensionalWeight\": 2,\n      \"description\": \"Ürün açıklama bilgisi\",\n      \"currencyType\": \"TRY\",\n      \"listPrice\": 250.99,\n      \"salePrice\": 120.99,\n      \"vatRate\": 18,\n      \"cargoCompanyId\": 10,\n      \"images\": [\n        {\n          \"url\": \"https://www.sampleadress/path/folder/image_1.jpg\"\n        }\n      ],\n      \"attributes\": [\n        {\n          \"attributeId\": 338,\n          \"attributeValueId\": 6980\n        },\n        {\n           \"attributeId\": 47,\n           \"customAttributeValue\": \"PUDRA\"\n         },\n        {\n          \"attributeId\": 346,\n          \"attributeValueId\": 4290\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/v2/products",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"v2",
+								"products"
+							]
+						},
+						"description": "https://developers.trendyol.com/en/urun-entegrasyonu/v2/product-update-v2"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Batchrequest Result (Toplu İşlem Kontrolü)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/products/batch-requests/{{batchRequestId}}",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"products",
+								"batch-requests",
+								"{{batchRequestId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trendyol Category List (Trendyol Kategori Listesi)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/product-categories",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"product-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trendyol Category-Attribute List (Trendyol Kategori - Özellik Listesi)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/product-categories/{{categoriId}}/attributes",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"product-categories",
+								"{{categoriId}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trendyol Brand List (Trendyol Marka Listesi)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/brands",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trendyol Shipment Providers List (Trendyol Kargo Şirketleri Listesi)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/shipment-providers",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"shipment-providers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Warehouse Addresses List (İade ve Sevkiyat Adres Bilgileri)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/addresses",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock and Price Update (Stok ve Fiyat Güncelleme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"barcode\": \"8680000000\",\n      \"quantity\": 100,\n      \"salePrice\": 112.85,\n      \"listPrice\": 113.85\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/products/price-and-inventory",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"products",
+								"price-and-inventory"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Integration",
+			"item": [
+				{
+					"name": "Get Orders (Sipariş Paketlerini Çekme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "19hEwqqDfY0XyGc9vnwi",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "tn8MAkxz3ke6d5prLNI6",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/orders?orderByField=PackageLastModifiedDate&orderByDirection=DESC&size=50",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderByField",
+									"value": "PackageLastModifiedDate"
+								},
+								{
+									"key": "orderByDirection",
+									"value": "DESC"
+								},
+								{
+									"key": "size",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Shipping Code Update (Kargo Takip Kodu Bildirme)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"trackingNumber\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/{shipmentPackageId}/update-tracking-number",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"{shipmentPackageId}",
+								"update-tracking-number"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePackage (Paket Statü Bildirimi) - Picking",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lines\": [{\n        \"lineId\": {lineId},\n        \"quantity\": 3\n    }],\n    \"params\": {},\n    \"status\": \"Picking\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/shipment-packages/{Id}",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"shipment-packages",
+								"{Id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePackage (Paket Statü Bildirimi) - Invoiced",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lines\": [{\n        \"lineId\": {lineId},\n        \"quantity\": 3\n    }],\n    \"params\": {\n        \"invoiceNumber\": \"EME2018000025208\"\n    },\n    \"status\": \"Invoiced\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/shipment-packages/{Id}",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"shipment-packages",
+								"{Id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order Package Item (Tedarik Edememe Bildirimi)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lines\": [{\n        \"lineId\": {lineId},\n        \"quantity\": 3\n    }],\n    \"params\": {\n        \"invoiceNumber\": \"EME2018000025208\"\n    },\n    \"status\": \"Invoiced\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/shipment-packages/{Id}",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"shipment-packages",
+								"{Id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Invoice Link (Fatura Linki Gönderme)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invoiceLink\": \"https://extfatura.faturaentegratoru.com/324523-34523-52345-3453245.pdf\",\n  \"shipmentPackageId\": 435346\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/supplier-invoice-links",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"supplier-invoice-links"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Split Order Package Item (Sipariş Paketlerini Bölme)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"splitPackages\": [\n    {\n      \"packageDetails\": [\n        {\n          \"orderLineId\": 12345,\n          \"quantities\": 2\n        },\n        {\n          \"orderLineId\": 123456,\n          \"quantities\": 1\n        }\n      ]\n    },\n    {\n      \"packageDetails\": [\n        {\n          \"orderLineId\": 123,\n          \"quantities\": 1\n        },\n        {\n          \"orderLineId\": 1234,\n          \"quantities\": 1\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/shipment-packages/{shipmentPackageId}/split-packages",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"shipment-packages",
+								"{shipmentPackageId}",
+								"split-packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Cargo Provider (Paket Kargo Firması Değiştirme)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cargoProvider\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/shipment-packages/{shipmentPackageId}/cargo-providers",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"shipment-packages",
+								"{shipmentPackageId}",
+								"cargo-providers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Claim Integration",
+			"item": [
+				{
+					"name": "Getting Returned Orders (İade Siparişleri Çekme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/claims?=",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"claims"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create A Return Request (İade Talebi Oluşturma)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"claimItems\": [\n    {\n      \"barcode\": \"string\",\n      \"customerNote\": \"string\", \n      \"quantity\": 0,\n      \"reasonId\": 401\n    }\n  ],\n  \"customerId\": 0,\n  \"excludeListing\": true,\n  \"forcePackageCreation\": true,\n  \"orderNumber\": \"string\",\n  \"shipmentCompanyId\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/claims/create",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"claims",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Returned Orders (İade Siparişleri Onaylama)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"claimLineItemIdList\": [\n    \"f9da2317-876b-4b86-b8f7-0535c3b65731\"\n  ],\n  \"params\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/claims/{{claimId}}/items/approve",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"claims",
+								"{{claimId}}",
+								"items",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create A Rejection Request On Returned Orders ( İade Siparişlerinde Ret Talebi Oluşturma)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/claims/{claimId}/issue?claimIssueReasonId={claimIssueReasonId}&claimItemIdList={claimItemIdList}&description={test}",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"claims",
+								"{claimId}",
+								"issue"
+							],
+							"query": [
+								{
+									"key": "claimIssueReasonId",
+									"value": "{claimIssueReasonId}"
+								},
+								{
+									"key": "claimItemIdList",
+									"value": "{claimItemIdList}"
+								},
+								{
+									"key": "description",
+									"value": "{test}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Claim Issue Reasons (İade Red Sebeplerini Çekme)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/claim-issue-reasons",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"claim-issue-reasons"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Question&Answer Integration",
+			"item": [
+				{
+					"name": "Getting Customer Questions (Müşteri Sorularını Çekme)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/questions/filter",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"questions",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Answering Customer Questions (Müşteri Sorularını Cevaplama)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stageapi.trendyol.com/stagesapigw/suppliers/{{supplierId}}/questions/{{id}}/answers",
+							"protocol": "https",
+							"host": [
+								"stageapi",
+								"trendyol",
+								"com"
+							],
+							"path": [
+								"stagesapigw",
+								"suppliers",
+								"{{supplierId}}",
+								"questions",
+								"{{id}}",
+								"answers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "supplierId",
+			"value": "2738"
+		}
+	]
+}

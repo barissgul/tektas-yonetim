@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Anamenu } from '../../anamenu/entities/anamenu.entity';
+import { AltAnamenu } from '../../alt-anamenu/entities/alt-anamenu.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('menu')
@@ -18,9 +19,13 @@ export class Menu {
   @Column({ type: 'varchar', length: 255 })
   menu: string;
 
-  @ApiProperty({ description: 'Ana menü ID' })
-  @Column({ name: 'anamenu_id' })
-  anamenu_id: number;
+  @ApiProperty({ description: 'Ana menü ID', required: false })
+  @Column({ name: 'anamenu_id', nullable: true })
+  anamenu_id?: number;
+
+  @ApiProperty({ description: 'Alt ana menü ID', required: false })
+  @Column({ name: 'alt_anamenu_id', nullable: true })
+  alt_anamenu_id?: number;
 
   @ApiProperty({ description: 'Rota bilgisi' })
   @Column({ type: 'varchar', length: 255 })
@@ -41,8 +46,13 @@ export class Menu {
   @Column({ type: 'varchar', length: 255, nullable: true })
   yetki_ids?: string;
 
-  @ApiProperty({ description: 'Ana menü', type: () => Anamenu })
-  @ManyToOne(() => Anamenu, (anamenu) => anamenu.menuler)
+  @ApiProperty({ description: 'Ana menü', type: () => Anamenu, required: false })
+  @ManyToOne(() => Anamenu, (anamenu) => anamenu.menuler, { nullable: true })
   @JoinColumn({ name: 'anamenu_id' })
-  anamenu: Anamenu;
+  anamenu?: Anamenu;
+
+  @ApiProperty({ description: 'Alt ana menü', type: () => AltAnamenu, required: false })
+  @ManyToOne(() => AltAnamenu, (altAnamenu) => altAnamenu.menuler, { nullable: true })
+  @JoinColumn({ name: 'alt_anamenu_id' })
+  altAnamenu?: AltAnamenu;
 }

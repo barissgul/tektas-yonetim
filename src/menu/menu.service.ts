@@ -19,7 +19,7 @@ export class MenuService {
 
   async findAll(): Promise<Menu[]> {
     return await this.menuRepository.find({
-      relations: ['anamenu'],
+      relations: ['anamenu', 'altAnamenu'],
       order: {
         sira: 'ASC',
       },
@@ -29,7 +29,7 @@ export class MenuService {
   async findOne(id: number): Promise<Menu> {
     const menu = await this.menuRepository.findOne({
       where: { id },
-      relations: ['anamenu'],
+      relations: ['anamenu', 'altAnamenu'],
     });
 
     if (!menu) {

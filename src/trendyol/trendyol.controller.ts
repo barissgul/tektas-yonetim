@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   Put,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -189,6 +191,46 @@ export class TrendyolController {
     return this.trendyolService.updatePrice(magazaKodu, priceUpdateData);
   }
 
+  @Get(':magazaKodu/products/batch-requests/:batchRequestId')
+  @ApiOperation({ summary: 'Toplu işlem sonucunu kontrol et' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'batchRequestId', description: 'Batch Request ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Batch request sonucu başarıyla getirildi',
+  })
+  getBatchRequestResult(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('batchRequestId') batchRequestId: string,
+  ) {
+    return this.trendyolService.getBatchRequestResult(
+      magazaKodu,
+      batchRequestId,
+    );
+  }
+
+  @Get(':magazaKodu/shipment-providers')
+  @ApiOperation({ summary: 'Kargo firmalar listesi' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 200,
+    description: 'Kargo firmaları başarıyla getirildi',
+  })
+  getShipmentProviders(@Param('magazaKodu') magazaKodu: string) {
+    return this.trendyolService.getShipmentProviders(magazaKodu);
+  }
+
+  @Get(':magazaKodu/addresses')
+  @ApiOperation({ summary: 'İade ve sevkiyat adres bilgileri' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 200,
+    description: 'Adresler başarıyla getirildi',
+  })
+  getAddresses(@Param('magazaKodu') magazaKodu: string) {
+    return this.trendyolService.getAddresses(magazaKodu);
+  }
+
   // ==================== SİPARİŞ İŞLEMLERİ ====================
 
   @Get(':magazaKodu/orders')
@@ -197,12 +239,12 @@ export class TrendyolController {
   @ApiQuery({
     name: 'startDate',
     required: false,
-    description: 'Başlangıç tarihi (YYYY-MM-DD)',
+    description: 'Başlangıç tarihi (YYYY-MM-DD) - Timestamp milliseconds GMT+3',
   })
   @ApiQuery({
     name: 'endDate',
     required: false,
-    description: 'Bitiş tarihi (YYYY-MM-DD)',
+    description: 'Bitiş tarihi (YYYY-MM-DD) - Timestamp milliseconds GMT+3',
   })
   @ApiQuery({
     name: 'page',
@@ -213,8 +255,37 @@ export class TrendyolController {
   @ApiQuery({
     name: 'size',
     required: false,
-    description: 'Sayfa boyutu',
+    description: 'Sayfa boyutu (Maksimum 200)',
     example: 50,
+  })
+  @ApiQuery({
+    name: 'orderNumber',
+    required: false,
+    description: 'Belirli sipariş numarası',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Sipariş durumu',
+    enum: ['Created', 'Picking', 'Invoiced', 'Shipped', 'Cancelled', 'Delivered', 'UnDelivered', 'Returned', 'AtCollectionPoint', 'UnPacked', 'UnSupplied'],
+  })
+  @ApiQuery({
+    name: 'orderByField',
+    required: false,
+    description: 'Sıralama alanı',
+    example: 'PackageLastModifiedDate',
+  })
+  @ApiQuery({
+    name: 'orderByDirection',
+    required: false,
+    description: 'Sıralama yönü',
+    enum: ['ASC', 'DESC'],
+    example: 'DESC',
+  })
+  @ApiQuery({
+    name: 'shipmentPackageIds',
+    required: false,
+    description: 'Paket numarası ile sorgu',
   })
   @ApiResponse({
     status: 200,
@@ -227,6 +298,11 @@ export class TrendyolController {
     @Query('endDate') endDate?: string,
     @Query('page') page?: number,
     @Query('size') size?: number,
+    @Query('orderNumber') orderNumber?: string,
+    @Query('status') status?: string,
+    @Query('orderByField') orderByField?: string,
+    @Query('orderByDirection') orderByDirection?: string,
+    @Query('shipmentPackageIds') shipmentPackageIds?: string,
   ) {
     return this.trendyolService.getOrders(
       magazaKodu,
@@ -234,6 +310,11 @@ export class TrendyolController {
       endDate,
       page,
       size,
+      orderNumber,
+      status,
+      orderByField,
+      orderByDirection,
+      shipmentPackageIds,
     );
   }
 
@@ -289,6 +370,102 @@ export class TrendyolController {
       magazaKodu,
       orderNumber,
       shipmentData,
+    );
+  }
+
+  @Put(':magazaKodu/shipment-packages/:shipmentPackageId/tracking-number')
+  @ApiOperation({ summary: 'Kargo takip kodu güncelle' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'shipmentPackageId', description: 'Shipment Package ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Kargo takip kodu başarıyla güncellendi',
+  })
+  updateTrackingNumber(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('shipmentPackageId') shipmentPackageId: string,
+    @Body('trackingNumber') trackingNumber: string,
+  ) {
+    return this.trendyolService.updateTrackingNumber(
+      magazaKodu,
+      shipmentPackageId,
+      trackingNumber,
+    );
+  }
+
+  @Put(':magazaKodu/shipment-packages/:shipmentPackageId')
+  @ApiOperation({
+    summary: 'Paket statü bildirimi (Picking, Invoiced vb.)',
+  })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'shipmentPackageId', description: 'Shipment Package ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paket statüsü başarıyla güncellendi',
+  })
+  updatePackageStatus(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('shipmentPackageId') shipmentPackageId: string,
+    @Body() updateData: any,
+  ) {
+    return this.trendyolService.updatePackageStatus(
+      magazaKodu,
+      shipmentPackageId,
+      updateData,
+    );
+  }
+
+  @Post(':magazaKodu/supplier-invoice-links')
+  @ApiOperation({ summary: 'Fatura linki gönder' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 201,
+    description: 'Fatura linki başarıyla gönderildi',
+  })
+  sendInvoiceLink(
+    @Param('magazaKodu') magazaKodu: string,
+    @Body() invoiceData: any,
+  ) {
+    return this.trendyolService.sendInvoiceLink(magazaKodu, invoiceData);
+  }
+
+  @Post(':magazaKodu/shipment-packages/:shipmentPackageId/split-packages')
+  @ApiOperation({ summary: 'Sipariş paketlerini böl' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'shipmentPackageId', description: 'Shipment Package ID' })
+  @ApiResponse({
+    status: 201,
+    description: 'Paket başarıyla bölündü',
+  })
+  splitPackage(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('shipmentPackageId') shipmentPackageId: string,
+    @Body() splitData: any,
+  ) {
+    return this.trendyolService.splitPackage(
+      magazaKodu,
+      shipmentPackageId,
+      splitData,
+    );
+  }
+
+  @Post(':magazaKodu/shipment-packages/:shipmentPackageId/cargo-providers')
+  @ApiOperation({ summary: 'Paket kargo firması değiştir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'shipmentPackageId', description: 'Shipment Package ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Kargo firması başarıyla değiştirildi',
+  })
+  changeCargoProvider(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('shipmentPackageId') shipmentPackageId: string,
+    @Body('cargoProvider') cargoProvider: string,
+  ) {
+    return this.trendyolService.changeCargoProvider(
+      magazaKodu,
+      shipmentPackageId,
+      cargoProvider,
     );
   }
 
@@ -353,5 +530,306 @@ export class TrendyolController {
     @Query('name') brandName: string,
   ) {
     return this.trendyolService.getBrandByName(magazaKodu, brandName);
+  }
+
+  // ==================== İADE İŞLEMLERİ ====================
+
+  @Get(':magazaKodu/claims')
+  @ApiOperation({ summary: 'İade siparişleri getir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Sayfa numarası',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'size',
+    required: false,
+    description: 'Sayfa boyutu',
+    example: 50,
+  })
+  @ApiQuery({
+    name: 'startDate',
+    required: false,
+    description: 'Başlangıç tarihi',
+  })
+  @ApiQuery({ name: 'endDate', required: false, description: 'Bitiş tarihi' })
+  @ApiResponse({
+    status: 200,
+    description: 'İade siparişleri başarıyla getirildi',
+  })
+  getClaims(
+    @Param('magazaKodu') magazaKodu: string,
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.trendyolService.getClaims(
+      magazaKodu,
+      page,
+      size,
+      startDate,
+      endDate,
+    );
+  }
+
+  @Post(':magazaKodu/claims/create')
+  @ApiOperation({ summary: 'İade talebi oluştur' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 201,
+    description: 'İade talebi başarıyla oluşturuldu',
+  })
+  createClaim(
+    @Param('magazaKodu') magazaKodu: string,
+    @Body() claimData: any,
+  ) {
+    return this.trendyolService.createClaim(magazaKodu, claimData);
+  }
+
+  @Put('claims/:claimId/items/approve')
+  @ApiOperation({ summary: 'İade siparişini onayla' })
+  @ApiParam({ name: 'claimId', description: 'Claim ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'İade başarıyla onaylandı',
+  })
+  approveClaim(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('claimId') claimId: string,
+    @Body() approveData: any,
+  ) {
+    return this.trendyolService.approveClaim(magazaKodu, claimId, approveData);
+  }
+
+  @Post('claims/:claimId/issue')
+  @ApiOperation({ summary: 'İade siparişinde ret talebi oluştur' })
+  @ApiParam({ name: 'claimId', description: 'Claim ID' })
+  @ApiQuery({
+    name: 'claimIssueReasonId',
+    required: true,
+    description: 'Red sebep ID',
+  })
+  @ApiQuery({
+    name: 'claimItemIdList',
+    required: true,
+    description: 'Claim Item ID listesi',
+  })
+  @ApiQuery({
+    name: 'description',
+    required: true,
+    description: 'Açıklama',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'İade ret talebi başarıyla oluşturuldu',
+  })
+  rejectClaim(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('claimId') claimId: string,
+    @Query('claimIssueReasonId') claimIssueReasonId: number,
+    @Query('claimItemIdList') claimItemIdList: string,
+    @Query('description') description: string,
+  ) {
+    return this.trendyolService.rejectClaim(
+      magazaKodu,
+      claimId,
+      claimIssueReasonId,
+      claimItemIdList,
+      description,
+    );
+  }
+
+  @Get(':magazaKodu/claim-issue-reasons')
+  @ApiOperation({ summary: 'İade red sebeplerini getir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 200,
+    description: 'İade red sebepleri başarıyla getirildi',
+  })
+  getClaimIssueReasons(@Param('magazaKodu') magazaKodu: string) {
+    return this.trendyolService.getClaimIssueReasons(magazaKodu);
+  }
+
+  // ==================== SORU-CEVAP İŞLEMLERİ ====================
+
+  @Get(':magazaKodu/questions')
+  @ApiOperation({ summary: 'Müşteri sorularını getir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Sayfa numarası',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'size',
+    required: false,
+    description: 'Sayfa boyutu',
+    example: 50,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Müşteri soruları başarıyla getirildi',
+  })
+  getQuestions(
+    @Param('magazaKodu') magazaKodu: string,
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+  ) {
+    return this.trendyolService.getQuestions(magazaKodu, page, size);
+  }
+
+  @Post(':magazaKodu/questions/:questionId/answers')
+  @ApiOperation({ summary: 'Müşteri sorusunu cevapla' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'questionId', description: 'Soru ID' })
+  @ApiResponse({
+    status: 201,
+    description: 'Soru başarıyla cevaplandı',
+  })
+  answerQuestion(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('questionId') questionId: string,
+    @Body('text') text: string,
+  ) {
+    return this.trendyolService.answerQuestion(magazaKodu, questionId, text);
+  }
+
+  // ==================== SİPARİŞ VERİTABANI İŞLEMLERİ ====================
+
+  @Post(':magazaKodu/orders/sync')
+  @ApiOperation({ summary: 'Trendyol siparişlerini API\'den çek ve veritabanına kaydet' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Sayfa numarası',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'size',
+    required: false,
+    description: 'Sayfa boyutu',
+    example: 50,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Siparişler başarıyla senkronize edildi',
+  })
+  async syncOrders(
+    @Param('magazaKodu') magazaKodu: string,
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+  ) {
+    // API'den siparişleri çek
+    const ordersResponse = await this.trendyolService.getOrders(
+      magazaKodu,
+      undefined, // startDate
+      undefined, // endDate
+      page || 0,
+      size || 50,
+    );
+
+    // Veritabanına kaydet
+    const result = await this.trendyolService.saveOrdersFromApi(
+      magazaKodu,
+      ordersResponse.content || [],
+    );
+
+    return {
+      message: 'Siparişler başarıyla senkronize edildi',
+      apiResponse: {
+        totalElements: ordersResponse.totalElements,
+        totalPages: ordersResponse.totalPages,
+        page: ordersResponse.page,
+        size: ordersResponse.size,
+      },
+      dbResult: result,
+    };
+  }
+
+  @Get(':magazaKodu/orders/db')
+  @ApiOperation({ summary: 'Veritabanından Trendyol siparişleri getir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Sayfa numarası',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'size',
+    required: false,
+    description: 'Sayfa boyutu',
+    example: 50,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Veritabanından siparişler başarıyla getirildi',
+  })
+  async getOrdersFromDb(
+    @Param('magazaKodu') magazaKodu: string,
+    @Query('page') page?: number,
+    @Query('size') size?: number,
+  ) {
+    const result = await this.trendyolService.getOrdersFromDb(
+      magazaKodu,
+      page || 0,
+      size || 50,
+    );
+
+    return {
+      total: result.total,
+      page: page || 0,
+      size: size || 50,
+      totalPages: Math.ceil(result.total / (size || 50)),
+      orders: result.orders,
+    };
+  }
+
+  @Get(':magazaKodu/orders/db/:orderNumber')
+  @ApiOperation({ summary: 'Veritabanından Trendyol sipariş detayı getir' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiParam({ name: 'orderNumber', description: 'Sipariş numarası' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sipariş detayı başarıyla getirildi',
+  })
+  async getOrderFromDb(
+    @Param('magazaKodu') magazaKodu: string,
+    @Param('orderNumber') orderNumber: string,
+  ) {
+    const order = await this.trendyolService.getOrderFromDb(orderNumber);
+    
+    if (!order) {
+      throw new HttpException('Sipariş bulunamadı', HttpStatus.NOT_FOUND);
+    }
+
+    return order;
+  }
+
+  @Post(':magazaKodu/orders/save')
+  @ApiOperation({ summary: 'Trendyol sipariş verilerini manuel olarak kaydet' })
+  @ApiParam({ name: 'magazaKodu', description: 'Mağaza kodu' })
+  @ApiResponse({
+    status: 200,
+    description: 'Siparişler başarıyla kaydedildi',
+  })
+  async saveOrders(
+    @Param('magazaKodu') magazaKodu: string,
+    @Body() ordersData: any[],
+  ) {
+    const result = await this.trendyolService.saveOrdersFromApi(
+      magazaKodu,
+      ordersData,
+    );
+
+    return {
+      message: 'Siparişler başarıyla kaydedildi',
+      result,
+    };
   }
 }

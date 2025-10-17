@@ -2,27 +2,27 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import axios, { AxiosInstance } from 'axios';
-import { HepsiburadaConfig } from './entities/hepsiburada-config.entity';
-import { CreateHepsiburadaConfigDto } from './dto/create-hepsiburada-config.dto';
-import { UpdateHepsiburadaConfigDto } from './dto/update-hepsiburada-config.dto';
+import { SanalMagaza } from '../sanal-magaza/entities/sanal-magaza.entity';
 
 @Injectable()
 export class HepsiburadaService {
   private axiosInstance: AxiosInstance;
 
   constructor(
-    @InjectRepository(HepsiburadaConfig)
-    private hepsiburadaConfigRepository: Repository<HepsiburadaConfig>,
+    @InjectRepository(SanalMagaza)
+    private sanalMagazaRepository: Repository<SanalMagaza>,
   ) {}
 
   // Axios instance oluşturma - her config için ayrı
-  private createAxiosInstance(config: HepsiburadaConfig): AxiosInstance {
+  private createAxiosInstance(config: SanalMagaza): AxiosInstance {
+    // Hepsiburada API'de username:secret_key formatında Basic Auth kullanılıyor
+    // PHP örneğine göre: new Hepsiburada('merchant_id','username','secret_key')
     const authString = Buffer.from(
-      `${config.username}:${config.password}`,
+      `${config.api_key}:${config.api_secret}`,
     ).toString('base64');
 
     return axios.create({
-      baseURL: config.api_base_url,
+      baseURL: config.api_url,
       headers: {
         Authorization: `Basic ${authString}`,
         'Content-Type': 'application/json',
@@ -34,40 +34,8 @@ export class HepsiburadaService {
 
   // ==================== CONFIG CRUD ====================
 
-  async createConfig(
-    createDto: CreateHepsiburadaConfigDto,
-  ): Promise<HepsiburadaConfig> {
-    const existingConfig = await this.hepsiburadaConfigRepository.findOne({
-      where: { magaza_kodu: createDto.magaza_kodu },
-    });
-
-    if (existingConfig) {
-      throw new HttpException(
-        'Bu mağaza kodu için zaten bir config var',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const config = this.hepsiburadaConfigRepository.create(createDto);
-    return await this.hepsiburadaConfigRepository.save(config);
-  }
-
-  async getAllConfigs(): Promise<HepsiburadaConfig[]> {
-    return await this.hepsiburadaConfigRepository.find();
-  }
-
-  async getConfigById(id: number): Promise<HepsiburadaConfig> {
-    const config = await this.hepsiburadaConfigRepository.findOne({
-      where: { id },
-    });
-    if (!config) {
-      throw new HttpException('Config bulunamadı', HttpStatus.NOT_FOUND);
-    }
-    return config;
-  }
-
-  async getConfigByMagazaKodu(magazaKodu: string): Promise<HepsiburadaConfig> {
-    const config = await this.hepsiburadaConfigRepository.findOne({
+  async getConfigByMagazaKodu(magazaKodu: string): Promise<SanalMagaza> {
+    const config = await this.sanalMagazaRepository.findOne({
       where: { magaza_kodu: magazaKodu, aktif: true },
     });
     if (!config) {
@@ -79,19 +47,6 @@ export class HepsiburadaService {
     return config;
   }
 
-  async updateConfig(
-    id: number,
-    updateDto: UpdateHepsiburadaConfigDto,
-  ): Promise<HepsiburadaConfig> {
-    const config = await this.getConfigById(id);
-    Object.assign(config, updateDto);
-    return await this.hepsiburadaConfigRepository.save(config);
-  }
-
-  async deleteConfig(id: number): Promise<void> {
-    const config = await this.getConfigById(id);
-    await this.hepsiburadaConfigRepository.remove(config);
-  }
 
   // ==================== ÜRÜN İŞLEMLERİ ====================
 
@@ -104,8 +59,10 @@ export class HepsiburadaService {
     const instance = this.createAxiosInstance(config);
 
     try {
+      // Hepsiburada API dokümantasyonuna göre doğru endpoint
+      // PHP örneğinde listing->getList() kullanılıyor
       const response = await instance.get(
-        `/listings/merchantid/${config.merchant_id}`,
+        `/listings`,
         {
           params: {
             offset,
@@ -114,9 +71,31 @@ export class HepsiburadaService {
         },
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Hepsiburada API Error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+        config: {
+          magaza_kodu: config.magaza_kodu,
+          satici_id: config.satici_id,
+        },
+      });
+
+      let errorMessage = 'Ürünler çekilemedi';
+      if (error.response?.status === 403) {
+        errorMessage = 'Hepsiburada API erişim izni reddedildi. API anahtarlarınızı kontrol edin.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Hepsiburada API kimlik doğrulama hatası. API anahtarlarınızı kontrol edin.';
+      } else if (error.response?.data?.message) {
+        errorMessage = `Ürünler çekilemedi: ${error.response.data.message}`;
+      } else {
+        errorMessage = `Ürünler çekilemedi: ${error.message}`;
+      }
+
       throw new HttpException(
-        `Ürünler çekilemedi: ${error.response?.data?.message || error.message}`,
+        errorMessage,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -128,10 +107,10 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.get(
-        `/listings/merchantid/${config.merchant_id}/sku/${merchantSku}`,
+        `/listings/merchantid/${config.satici_id}/sku/${merchantSku}`,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Ürün detayı çekilemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -150,7 +129,7 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.get(
-        `/listings/merchantid/${config.merchant_id}`,
+        `/listings/merchantid/${config.satici_id}`,
         {
           params: {
             offset,
@@ -160,7 +139,7 @@ export class HepsiburadaService {
         },
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Ürünler filtrelenemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -176,11 +155,11 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.post(
-        `/listings/merchantid/${config.merchant_id}/inventory`,
+        `/listings/merchantid/${config.satici_id}/inventory`,
         stockUpdateData,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Stok güncellenemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -196,11 +175,11 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.post(
-        `/listings/merchantid/${config.merchant_id}/price`,
+        `/listings/merchantid/${config.satici_id}/price`,
         priceUpdateData,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Fiyat güncellenemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -227,11 +206,11 @@ export class HepsiburadaService {
       if (endDate) params.endDate = endDate;
 
       const response = await instance.get(
-        `/orders/merchantid/${config.merchant_id}`,
+        `/orders/merchantid/${config.satici_id}`,
         { params },
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Siparişler çekilemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -245,10 +224,10 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.get(
-        `/orders/merchantid/${config.merchant_id}/ordernumber/${orderNumber}`,
+        `/orders/merchantid/${config.satici_id}/ordernumber/${orderNumber}`,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Sipariş detayı çekilemedi: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -262,11 +241,11 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.post(
-        `/orders/merchantid/${config.merchant_id}/acknowledge`,
+        `/orders/merchantid/${config.satici_id}/acknowledge`,
         orderData,
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         `Sipariş onaylanamadı: ${error.response?.data?.message || error.message}`,
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -280,7 +259,7 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.post(
-        `/orders/merchantid/${config.merchant_id}/shipments`,
+        `/orders/merchantid/${config.satici_id}/shipments`,
         shipmentData,
       );
       return response.data;
@@ -298,7 +277,7 @@ export class HepsiburadaService {
 
     try {
       const response = await instance.post(
-        `/orders/merchantid/${config.merchant_id}/cancellations`,
+        `/orders/merchantid/${config.satici_id}/cancellations`,
         cancelData,
       );
       return response.data;

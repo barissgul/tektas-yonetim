@@ -26,48 +26,6 @@ import { HepsiburadaOrderListDto } from './dto/hepsiburada-order.dto';
 export class HepsiburadaController {
   constructor(private readonly hepsiburadaService: HepsiburadaService) {}
 
-  // ==================== CONFIG CRUD ====================
-
-  @Post('config')
-  @ApiOperation({ summary: 'Yeni Hepsiburada config oluştur' })
-  @ApiResponse({ status: 201, description: 'Config başarıyla oluşturuldu' })
-  createConfig(@Body() createDto: CreateHepsiburadaConfigDto) {
-    return this.hepsiburadaService.createConfig(createDto);
-  }
-
-  @Get('config')
-  @ApiOperation({ summary: 'Tüm Hepsiburada configleri getir' })
-  @ApiResponse({ status: 200, description: 'Configler başarıyla getirildi' })
-  getAllConfigs() {
-    return this.hepsiburadaService.getAllConfigs();
-  }
-
-  @Get('config/:id')
-  @ApiOperation({ summary: 'ID ile Hepsiburada config getir' })
-  @ApiParam({ name: 'id', description: 'Config ID' })
-  @ApiResponse({ status: 200, description: 'Config başarıyla getirildi' })
-  getConfigById(@Param('id') id: string) {
-    return this.hepsiburadaService.getConfigById(+id);
-  }
-
-  @Patch('config/:id')
-  @ApiOperation({ summary: 'Hepsiburada config güncelle' })
-  @ApiParam({ name: 'id', description: 'Config ID' })
-  @ApiResponse({ status: 200, description: 'Config başarıyla güncellendi' })
-  updateConfig(
-    @Param('id') id: string,
-    @Body() updateDto: UpdateHepsiburadaConfigDto,
-  ) {
-    return this.hepsiburadaService.updateConfig(+id, updateDto);
-  }
-
-  @Delete('config/:id')
-  @ApiOperation({ summary: 'Hepsiburada config sil' })
-  @ApiParam({ name: 'id', description: 'Config ID' })
-  @ApiResponse({ status: 200, description: 'Config başarıyla silindi' })
-  deleteConfig(@Param('id') id: string) {
-    return this.hepsiburadaService.deleteConfig(+id);
-  }
 
   // ==================== ÜRÜN İŞLEMLERİ ====================
 

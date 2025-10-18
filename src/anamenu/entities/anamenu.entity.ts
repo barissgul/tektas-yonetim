@@ -13,10 +13,6 @@ export class Anamenu {
   @Column({ type: 'varchar', length: 255 })
   anamenu: string;
 
-  @ApiProperty({ description: 'Rota bilgisi' })
-  @Column({ type: 'varchar', length: 255 })
-  rota: string;
-
   @ApiProperty({ description: 'İkon adı', required: false })
   @Column({ type: 'varchar', length: 100, nullable: true })
   ikon?: string;

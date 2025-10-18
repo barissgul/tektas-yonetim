@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { MarkalarService } from './markalar.service';
 import { CreateMarkaDto } from './dto/create-marka.dto';
@@ -37,13 +39,18 @@ export class MarkalarController {
 
   @Get()
   @ApiOperation({ summary: 'Tüm markaları getir' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Marka adında arama yap',
+  })
   @ApiResponse({
     status: 200,
     description: 'Markalar başarıyla getirildi.',
     type: [Marka],
   })
-  findAll() {
-    return this.markalarService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.markalarService.findAll(search);
   }
 
   @Get(':id')
@@ -81,4 +88,3 @@ export class MarkalarController {
     return this.markalarService.remove(+id);
   }
 }
-

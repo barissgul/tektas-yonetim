@@ -17,6 +17,10 @@ export class AltAnamenu {
   @Column({ name: 'anamenu_id' })
   anamenu_id: number;
 
+  @ApiProperty({ description: 'Rota bilgisi', required: false })
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  rota?: string;
+
   @ApiProperty({ description: 'İkon adı', required: false })
   @Column({ type: 'varchar', length: 100, nullable: true })
   ikon?: string;

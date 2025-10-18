@@ -1,6 +1,6 @@
 -- Trendyol Ana Menüsü ekle
-INSERT INTO anamenu (anamenu, rota, ikon, sira, yetki_ids)
-SELECT 'Trendyol', '/trendyol', 'PiShoppingCart', 5, NULL
+INSERT INTO anamenu (anamenu, ikon, sira, yetki_ids)
+SELECT 'Trendyol', 'PiShoppingCart', 5, NULL
 WHERE NOT EXISTS (
     SELECT 1 FROM anamenu WHERE anamenu = 'Trendyol'
 );
@@ -36,7 +36,6 @@ WHERE NOT EXISTS (
 -- Kontrol
 SELECT 
     CONCAT('Ana Menü: ', a.anamenu) as menu_adi,
-    a.rota,
     a.ikon,
     a.sira
 FROM anamenu a
@@ -44,7 +43,6 @@ WHERE a.anamenu = 'Trendyol'
 UNION ALL
 SELECT 
     CONCAT('  ↳ Alt Menü: ', m.menu) as menu_adi,
-    m.rota,
     m.ikon,
     m.sira
 FROM menu m

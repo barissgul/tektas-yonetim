@@ -7,11 +7,6 @@ export class CreateAnamenuDto {
   @IsNotEmpty()
   anamenu: string;
 
-  @ApiProperty({ description: 'Rota bilgisi', example: '/yonetim' })
-  @IsString()
-  @IsNotEmpty()
-  rota: string;
-
   @ApiProperty({ description: 'İkon adı', example: 'PiGear', required: false })
   @IsString()
   @IsOptional()

@@ -17,9 +17,7 @@ export class MarkalarService {
     return await this.markaRepository.save(marka);
   }
 
-  async findAll(page: number = 1, limit: number = 10, search?: string) {
-    const skip = (page - 1) * limit;
-
+  async findAll(search?: string) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereCondition: any = {
       durum: 1,
@@ -31,22 +29,17 @@ export class MarkalarService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const [data, total] = await this.markaRepository.findAndCount({
+    const data = await this.markaRepository.find({
       where: whereCondition,
       order: {
         marka: 'ASC',
       },
-      skip,
-      take: limit,
     });
 
     return {
       data,
       meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
+        total: data.length,
       },
     };
   }

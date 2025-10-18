@@ -14,6 +14,9 @@ import { HepsiburadaModule } from './hepsiburada/hepsiburada.module';
 import { N11Module } from './n11/n11.module';
 import { TektasModule } from './tektas/tektas.module';
 import { MarkalarModule } from './markalar/markalar.module';
+import { UrunlerModule } from './urunler/urunler.module';
+import { SiparislerModule } from './siparisler/siparisler.module';
+import { ParcaMarkalarModule } from './parca-markalar/parca-markalar.module';
 
 @Module({
   imports: [
@@ -41,6 +44,9 @@ import { MarkalarModule } from './markalar/markalar.module';
     N11Module,
     TektasModule,
     MarkalarModule,
+    UrunlerModule,
+    SiparislerModule,
+    ParcaMarkalarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

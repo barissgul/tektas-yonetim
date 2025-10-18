@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `alt_anamenu` (
   `id` int NOT NULL AUTO_INCREMENT,
   `alt_anamenu` varchar(255) NOT NULL,
   `anamenu_id` int NOT NULL,
+  `rota` varchar(255) DEFAULT NULL,
   `ikon` varchar(100) DEFAULT NULL,
   `sira` int DEFAULT '0',
   `yetki_ids` varchar(255) DEFAULT NULL,

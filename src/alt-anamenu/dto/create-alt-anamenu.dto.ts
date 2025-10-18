@@ -12,6 +12,11 @@ export class CreateAltAnamenuDto {
   @IsNotEmpty()
   anamenu_id: number;
 
+  @ApiProperty({ description: 'Rota bilgisi', example: '/yonetim/ayarlar', required: false })
+  @IsString()
+  @IsOptional()
+  rota?: string;
+
   @ApiProperty({ description: 'İkon adı', required: false })
   @IsString()
   @IsOptional()
